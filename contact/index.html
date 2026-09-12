@@ -1,51 +1,324 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
   <head>
-    <title>Contact</title>
-    <style>body{background: linear-gradient(to right, #eafed8, #fdead8);}</style>
-  </head>
-  <body>
-    <h1 class="strinmoH1">Strinmo</h1>
-    <h3 class="strinmoH3">Strinmo forever.</h3>
-    <hr style="position: absolute; height: 1px; width: 1601px; bottom: 600px; background-color: black; left: 0px;">
-    
-    <h1 class="email"><a href="/Email">Email</a></h1>
-    <h1 class="reddit"><a href="https://www.reddit.com/user/Positive_Spite_1656/">Reddit</a></h1>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fce7d0" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b2a1a" />
+    <meta name="description" content="Ways to reach Strinmo — email or find me on Reddit." />
+    <meta property="og:title" content="Contact — Strinmo" />
+    <meta property="og:description" content="Ways to reach Strinmo — email or find me on Reddit." />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23e85d50'/%3E%3Cstop offset='1' stop-color='%2312a594'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Georgia, serif' font-size='34' font-weight='700' fill='white' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E"
+    />
+    <title>Contact — Strinmo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      .strinmoH1 {
-        position: absolute;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        display: inline-block;
-        transform: translate(650px, -30px);
-        font-size: xxx-large;
+      :root {
+        --mint: #e4f8d8;
+        --peach: #fce7d0;
+        --cream: #fffdf7;
+        --ink: #2f3a2c;
+        --muted: #71806c;
+        --coral: #e85d50;
+        --teal: #12a594;
+        --reddit: #ff4500;
+        --font-display: 'Fraunces', Georgia, serif;
+        --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont,
+          'Segoe UI', sans-serif;
       }
 
-      .strinmoH3 {
-        position: absolute;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        display: inline-block;
-        transform: translate(690px, 60px);
-        font-size: medium;
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --mint: #1b2a1a;
+          --peach: #2a1f1a;
+          --cream: #232a22;
+          --ink: #edf3e8;
+          --muted: #9fb098;
+          --coral: #ff8a7b;
+          --teal: #2dd4c0;
+          --reddit: #ff6a33;
+        }
       }
 
-      .reddit {
-        position: absolute;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        display: inline-block;
-        font-size: xxx-large;
-        left: 685px;
-        bottom: 160px;
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
       }
 
-      .email {
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: none;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(160deg, var(--mint) 0%, var(--peach) 100%);
+        font-family: var(--font-body);
+        color: var(--ink);
+        padding: clamp(1.25rem, 6vw, 4rem) 1.25rem;
+        position: relative;
+        transition: background-color 0.2s ease;
+      }
+
+      body::before,
+      body::after {
+        content: '';
         position: absolute;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        display: inline-block;
-        left: 700px;
-        bottom: 400px;
-        font-size: xxx-large;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.4;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      body::before {
+        width: 260px;
+        height: 260px;
+        background: var(--coral);
+        top: -70px;
+        left: -70px;
+      }
+
+      body::after {
+        width: 240px;
+        height: 240px;
+        background: var(--teal);
+        bottom: -60px;
+        right: -60px;
+      }
+
+      .page-wrap {
+        width: 100%;
+        max-width: 420px;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(1.1rem, 5vw, 2.5rem);
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 0.6s ease both;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .site-header {
+        text-align: center;
+      }
+
+      .wordmark {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(2.25rem, 10vw, 4.25rem);
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+
+      .tagline {
+        margin: 0.5rem 0 0;
+        font-weight: 500;
+        font-size: clamp(0.85rem, 2vw, 1.05rem);
+        color: var(--muted);
+      }
+
+      .accent-rule {
+        width: 56px;
+        height: 4px;
+        border-radius: 999px;
+        margin: clamp(0.75rem, 3vw, 1.5rem) auto 0;
+        background: linear-gradient(90deg, var(--coral), var(--teal));
+      }
+
+      .links {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .links li {
+        width: 100%;
+      }
+
+      .link-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        width: 100%;
+        padding: clamp(0.75rem, 2.5vw, 1.15rem) 1.5rem;
+        border-radius: 16px;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+        text-decoration: none;
+        touch-action: manipulation;
+        transition: transform 0.15s ease, background-color 0.15s ease,
+          color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .link-btn svg {
+        flex-shrink: 0;
+      }
+
+      .link-btn:active {
+        transform: scale(0.98);
+      }
+
+      .link-btn.email {
+        background: rgba(18, 165, 148, 0.12);
+        color: var(--teal);
+      }
+      .link-btn.email:hover,
+      .link-btn.email:focus-visible {
+        background: var(--teal);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px -10px rgba(18, 165, 148, 0.55);
+      }
+
+      .link-btn.reddit {
+        background: rgba(255, 69, 0, 0.12);
+        color: var(--reddit);
+      }
+      .link-btn.reddit:hover,
+      .link-btn.reddit:focus-visible {
+        background: var(--reddit);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px -10px rgba(255, 69, 0, 0.5);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      *:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+
+      @media (min-width: 768px) {
+        .page-wrap {
+          max-width: 460px;
+        }
+        body::before {
+          width: 320px;
+          height: 320px;
+        }
+        body::after {
+          width: 300px;
+          height: 300px;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .link-btn {
+          padding: 0.75rem 1rem;
+        }
+      }
+
+      @media (max-height: 640px) {
+        .page-wrap {
+          gap: 0.9rem;
+        }
+        .wordmark {
+          font-size: clamp(1.9rem, 8vw, 3rem);
+        }
+        .accent-rule {
+          margin-top: 0.5rem;
+        }
+        .link-btn {
+          padding: 0.6rem 1rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
       }
     </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <header class="site-header">
+        <h1 class="wordmark">Strinmo</h1>
+        <h3 class="tagline">Strinmo forever.</h3>
+        <div class="accent-rule"></div>
+      </header>
+
+      <nav aria-label="Primary links">
+        <ul class="links">
+          <li>
+            <a class="link-btn email" href="/Email">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                <path d="M2 6l10 7 10-7"></path>
+              </svg>
+              <span>Email</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="link-btn reddit"
+              href="https://www.reddit.com/user/Positive_Spite_1656/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="8" r="3"></circle>
+                <path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6"></path>
+                <circle cx="18" cy="8" r="2.5"></circle>
+                <path d="M16.5 14.2c2.6.4 4.5 2.4 4.5 5.8"></path>
+              </svg>
+              <span>Reddit</span>
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </body>
 </html>
