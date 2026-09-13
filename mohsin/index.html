@@ -1,176 +1,327 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Mohsin Personal Web</title>
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mohsin's Study Hub</title>
+  <meta name="description" content="Mohsin's personal hub for staying on top of school — tests, deadlines, links, and a daily study log.">
 
-  <body>
-    
-    <script>
-      //Toggling Between Dark and Light Mode Script
-      let leftBarChangeColor = document.getElementById('toggleLeftBar')
-      let changeviewbtn = document.getElementById('Mode');
-      function Dark() {
-        document.body.style.backgroundColor = "rgb(38, 38, 38)"
-        document.body.style.color = "chartreuse";
-        
-      }
-      function Light() {
-        document.body.style.background = "linear-gradient(to right, #fffbd9, #d8f8fd)";
-        document.body.style.color = "black";
-        document.LeftBarButton.style.color = "red"
-                        
-      }
-      
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        Dark()
+  <!-- Favicon: a small version of the same monogram used in the page logo -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%236E2A34'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='32' fill='%23F3EEE1'%3EM%3C/text%3E%3C/svg%3E">
+
+  <!-- Fonts: Fraunces (serif, for the display title / logo) + IBM Plex Sans (for everything else) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+  <script>
+    // Set the theme before the page paints, so there's no flash of the wrong theme.
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) {}
+      var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
+  <style>
+    :root {
+      /* Light theme — "day desk": paper and ink */
+      --bg: #F3EEE1;
+      --surface: #FFFDF8;
+      --ink: #2A2622;
+      --ink-soft: #6B6255;
+      --accent: #6E2A34;   /* oxblood */
+      --accent-2: #9C7A2E; /* brass */
+      --rule: #DED2BC;
+      --focus: #6E2A34;
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+      --shadow: 3px 3px 0 var(--rule);
+    }
+
+    [data-theme="dark"] {
+      /* Dark theme — "night desk": ink navy and lamp light */
+      --bg: #14161D;
+      --surface: #1B1E27;
+      --ink: #EDE6D6;
+      --ink-soft: #A6A090;
+      --accent: #C9A227;   /* brass lamp glow */
+      --accent-2: #A85D63; /* softened oxblood */
+      --rule: #2B2E3A;
+      --focus: #C9A227;
+      --shadow: 3px 3px 0 var(--rule);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem; top: -3rem;
+      background: var(--accent);
+      color: var(--surface);
+      padding: 0.6rem 1rem;
+      border-radius: 3px;
+      transition: top 0.2s ease;
+      z-index: 10;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    a { color: inherit; }
+
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      display: block;
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      width: 2.5rem;
+      height: 2.5rem;
+      cursor: pointer;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .theme-toggle svg { width: 1.15rem; height: 1.15rem; }
+    .theme-toggle .icon-moon { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+    /* Hero */
+    .hero {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo { flex-shrink: 0; }
+
+    .site-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(1.65rem, 1.1rem + 2vw, 2.4rem);
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+
+    .typed-cursor { color: var(--accent); }
+
+    .tagline {
+      margin: 1rem 0 0;
+      max-width: 46ch;
+      color: var(--ink-soft);
+      font-size: 1rem;
+    }
+
+    /* Nav grid — index cards, not rounded SaaS cards */
+    .hub-nav {
+      list-style: none;
+      margin: 2.5rem 0 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.1rem;
+    }
+
+    @media (max-width: 480px) {
+      .hub-nav { grid-template-columns: 1fr; }
+      .hero { flex-direction: column; align-items: flex-start; }
+    }
+
+    .hub-nav a {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      box-shadow: var(--shadow);
+      padding: 1.1rem 1.1rem 1.2rem;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .hub-nav a:hover,
+    .hub-nav a:focus-visible {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 var(--rule);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hub-nav a { transition: none; }
+      .hub-nav a:hover, .hub-nav a:focus-visible { transform: none; }
+    }
+
+    .hub-nav svg {
+      width: 1.6rem;
+      height: 1.6rem;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .hub-nav .label {
+      display: block;
+      margin-top: 0.65rem;
+      font-weight: 500;
+      font-size: 1.02rem;
+    }
+
+    .hub-nav .caption {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--rule);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#hub-nav">Skip to navigation</a>
+
+  <div class="wrap">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Switch to dark theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>
+    </button>
+
+    <header class="hero">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="46" height="46" role="img" focusable="false">
+          <circle cx="32" cy="32" r="30" fill="var(--accent)"></circle>
+          <text x="32" y="43" text-anchor="middle" font-family="var(--font-display)" font-weight="600" font-size="30" fill="var(--surface)">M</text>
+        </svg>
+      </div>
+      <div>
+        <h1 class="site-title">
+          <span id="typedTitle" aria-hidden="true"></span>
+          <span class="sr-only">Mohsin's Study Hub</span>
+        </h1>
+      </div>
+    </header>
+
+    <p class="tagline">A personal hub for staying on top of school: tests, deadlines, links, and your daily study log.</p>
+
+    <ul class="hub-nav" id="hub-nav">
+      <li>
+        <a href="https://strinmo.com/mohsin/tests">
+          <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 12.5l2 2 4.5-4.5"/></svg>
+          <span class="label">Tests</span>
+          <span class="caption">Upcoming exams and quizzes</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://strinmo.com/mohsin/deadlines">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
+          <span class="label">Deadlines</span>
+          <span class="caption">Assignments and due dates</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://strinmo.com/mohsin/links">
+          <svg viewBox="0 0 24 24"><path d="M9.5 14.5l5-5"/><path d="M8 12l-1.5 1.5a3 3 0 004.2 4.2L12 16.2"/><path d="M16 12l1.5-1.5a3 3 0 00-4.2-4.2L12 7.8"/></svg>
+          <span class="label">Links</span>
+          <span class="caption">Portals, docs, and references</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://strinmo.com/mohsin/study-log">
+          <svg viewBox="0 0 24 24"><path d="M6 4.5C7.5 3.5 10 3.5 12 5c2-1.5 4.5-1.5 6-0.5v13c-1.5-1-4-1-6 0.5-2-1.5-4.5-1.5-6-0.5z"/><path d="M12 5v13"/></svg>
+          <span class="label">Study Log</span>
+          <span class="caption">Daily record</span>
+        </a>
+      </li>
+    </ul>
+
+    <footer>
+      Built by Mohsin to keep school organized in one place.
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Typed title — types once, no endless loop.
+      if (reduceMotion) {
+        document.getElementById('typedTitle').textContent = "Mohsin's Study Hub";
+      } else if (window.Typed) {
+        new Typed('#typedTitle', {
+          strings: ["Mohsin's Study Hub"],
+          typeSpeed: 55,
+          startDelay: 200,
+          showCursor: true,
+          loop: false
+        });
+      } else {
+        document.getElementById('typedTitle').textContent = "Mohsin's Study Hub";
       }
 
-      else {
-        Light()
+      // Theme toggle
+      var toggle = document.getElementById('themeToggle');
+      function currentTheme() {
+        return document.documentElement.getAttribute('data-theme') || 'light';
       }
-      changeviewbtn.addEventListener("click", () => {
-        changeviewbtn.blur()
-      })
-    </script>
-    <style>
-      #Welcoming {
-        
-        white-space: nowrap;
-        overflow: hidden;
+      function applyState() {
+        var isDark = currentTheme() === 'dark';
+        toggle.setAttribute('aria-pressed', String(isDark));
+        toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
       }
-      .WelcomingCSS {
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        font-size: xxx-large;
-        position: absolute;
-        left: 480px;
-        transform: translateY(0%);
-        
-      }
-    </style>
-    <div id="Welcoming" class="WelcomingCSS"></div>
-    <script>
-      //Mohsin's Personal Website Text Effect Script
-      var Welcoming = new Typed("#Welcoming", {
-        strings: ["Mohsin's Personal Website"],
-        typeSpeed: 70,
-        backSpeed: 30,
-        startDelay: 200,
-        backDelay: 1400,
-        showCursor: false,
-        loop: true
+      applyState();
+      toggle.addEventListener('click', function () {
+        var next = currentTheme() === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        applyState();
       });
-    </script>
-
-    <style>
-      #toggleLeftBar {
-        background: transparent;
-        position: absolute;
-        width: 50px;
-        height: 51.5px;
-        font-size: x-large;
-        border: 0;
-        left: 10px;
-        transform: translateY(105%) translateX(220%);
-        cursor: pointer;
-        color: rgb(255, 0, 0);
-        white-space: nowrap;
-      }
-
-      #LeftBar {
-        background: transparent;
-        width: 100px;
-        
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-        font-size: x-large;
-        left: -110px;
-        position:absolute;
-        transform: translateX(-100%);
-        transform: translateY(30%);
-        transition: transform 0.4s ease-in;
-        transition: transform 0.4s ease-out;
-        opacity: 0;
-        transform: translateX(-100%) translateY(30%);
-        opacity: 1;
-      }
-      #LeftBar.active {
-        transform: translateX(140%) translateY(30%);; 
-        opacity: 1;
-      }
-
-      .Calender {
-        cursor: pointer;
-        font-weight: 100;
-        font-size: xx-large;
-      }
-
-      .Subjects {
-        cursor: pointer;
-        font-weight: 100;
-        font-size: xx-large;
-      }
-
-      .links {
-        cursor: pointer;
-        font-weight: 100;
-        font-size: xx-large;
-      }
-
-      .StudyLog {
-        cursor: pointer;
-        font-weight: 100;
-        font-size: xx-large;
-        white-space: nowrap;
-      }
-    </style>
-
-    <button class="LeftBarButton" id="toggleLeftBar" tabindex="-1">⨁</button>
-    <h1 class="hotstaff" style="
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    font-size: xx-large;
-    transform: translateX(10%) translateY(99%);
-    position: absolute;
-    ">School</h1>
-    <script>
-      //Chaning the Button Icon to swith between close & open bar
-      const Changing_Shape = document.getElementById("toggleLeftBar")
-      Changing_Shape.addEventListener("click", () => {
-        if (Changing_Shape.innerText === "⨁") {
-          Changing_Shape.innerText = "⨂";
-        } else if (Changing_Shape.innerText = "⨂") {
-          Changing_Shape.innerText = "⨁";
-        } 
-        Changing_Shape.blur();
-      })
-    </script>
-    <div id="LeftBar">
-      <h1 class="Calender" onclick="window.open('/mohsin/events', '_self')">Events</h1>
-      <h1 class="Subjects" onclick="window.open('/mohsin/subjects', '_self')"><br>Subjects</h1>
-      <h1 class="links"><br>Links</h1>
-      <h1 class="StudyLog"><br>Study Log</h1>
-    </div>
-    <script>
-      //Left Bar Code
-      const LeftBarBTN = document.getElementById('toggleLeftBar');
-      const LeftBarDiv = document.getElementById('LeftBar');
-      let toggle = 2
-      if (toggle === 2) {
-        LeftBarBTN.addEventListener("click", () => {
-          LeftBarDiv.classList.toggle("active");
-          toggle = 3
-      });
-      }
-      if (toggle === 3) {
-        LeftBarBTN.addEventListener("click", () => {
-          LeftBarDiv.classList.toggle("disabled");
-          toggle = 2
-      });
-      }
-
-    </script>
-
-
-  </body>
+    })();
+  </script>
+</body>
 </html>
