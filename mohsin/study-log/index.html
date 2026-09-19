@@ -108,7 +108,7 @@
     [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 
     .entry-form {
-      margin-top: 2rem;
+      margin-top: 0.85rem;
       background: var(--surface);
       border: 1px solid var(--rule);
       box-shadow: var(--shadow);
@@ -174,6 +174,17 @@
 
     .empty-state { margin-top: 2rem; color: var(--ink-soft); font-size: 0.95rem; }
 
+    .current-file {
+      margin: 1.75rem 0 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(1.3rem, 4vw + 0.5rem, 2rem);
+      color: var(--ink);
+      text-align: center;
+      letter-spacing: -0.01em;
+      word-break: break-word;
+    }
+
     @media (max-width: 480px) {
       .entry-form { flex-direction: column; align-items: stretch; }
       .save-btn { width: 100%; }
@@ -200,7 +211,7 @@
       </div>
       <input type="file" id="importFile" accept="application/json,.json" class="sr-only" tabindex="-1">
       <button type="button" class="icon-btn" id="exportBtn" aria-label="Export study log as JSON file">
-        <svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
       </button>
       <button type="button" class="icon-btn" id="importBtn" aria-label="Import study log from JSON file">
         <svg viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M4 19h16"/></svg>
@@ -210,6 +221,8 @@
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>
       </button>
     </header>
+
+    <p class="current-file" id="currentFileLabel"></p>
 
     <form class="entry-form" id="entryForm">
       <div class="field" style="flex: 1 1 160px;">
@@ -263,22 +276,78 @@
     const userList = document.getElementById("userList");
     const emptyState = document.getElementById("emptyState");
 
+    // --- Current file name (shown as the page title, no .json extension) ---
+    const FILENAME_KEY = "StudyLog_Mohsin_filename";
+    const currentFileLabel = document.getElementById("currentFileLabel");
+
+    function defaultFileName() {
+      return `study-log-${new Date().toISOString().slice(0, 10)}`;
+    }
+
+    function stripJsonExt(name) {
+      return name.replace(/\.json$/i, "");
+    }
+
+    let currentFileName = localStorage.getItem(FILENAME_KEY) || defaultFileName();
+
+    function setCurrentFileName(name) {
+      currentFileName = stripJsonExt(name);
+      try { localStorage.setItem(FILENAME_KEY, currentFileName); } catch (e) {}
+      currentFileLabel.textContent = currentFileName;
+    }
+
+    setCurrentFileName(currentFileName);
+
     const exportBtn = document.getElementById("exportBtn");
     const importBtn = document.getElementById("importBtn");
     const importFile = document.getElementById("importFile");
 
-    exportBtn.addEventListener("click", () => {
+    exportBtn.addEventListener("click", async () => {
       const data = localStorage.getItem("StudyLog_Mohsin") || "{}";
+      const today = new Date().toISOString().slice(0, 10);
+      const suggestedName = `study-log-${today}.json`;
+
+      // Modern browsers (Chrome, Edge, ...): real "Save As" dialog —
+      // lets the user pick both the file name and the folder.
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName,
+            types: [{
+              description: "JSON file",
+              accept: { "application/json": [".json"] }
+            }]
+          });
+          const writable = await handle.createWritable();
+          await writable.write(data);
+          await writable.close();
+          setCurrentFileName(handle.name);
+        } catch (err) {
+          if (err.name !== "AbortError") {
+            alert("Couldn't save the file: " + err.message);
+          }
+        }
+        return;
+      }
+
+      // Fallback (Safari, Firefox, ...): these browsers don't let a page
+      // choose the folder, but we can at least ask for a file name; the
+      // browser then saves it to its default downloads location.
+      let filename = prompt("Save as:", suggestedName);
+      if (filename === null) return; // cancelled
+      filename = filename.trim() || suggestedName;
+      if (!filename.toLowerCase().endsWith(".json")) filename += ".json";
+
       const blob = new Blob([data], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      const today = new Date().toISOString().slice(0, 10);
       a.href = url;
-      a.download = `study-log-${today}.json`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      setCurrentFileName(filename);
     });
 
     importBtn.addEventListener("click", () => importFile.click());
@@ -308,6 +377,7 @@
         }
         entries = parsed;
         localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries));
+        setCurrentFileName(file.name);
         renderList();
         importFile.value = "";
       };
