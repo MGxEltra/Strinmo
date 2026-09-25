@@ -2,22 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Mohsin's Study Hub</title>
   <meta name="description" content="Mohsin's personal hub for staying on top of school — tests, deadlines, links, and a daily study log.">
 
-  <!-- Favicon: a small version of the same monogram used in the page logo -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%236E2A34'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='32' fill='%23F3EEE1'%3EM%3C/text%3E%3C/svg%3E">
 
-  <!-- Fonts: Fraunces (serif, for the display title / logo) + IBM Plex Sans (for everything else) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
   <script>
-    // Set the theme before the page paints, so there's no flash of the wrong theme.
     (function () {
       var saved = null;
       try { saved = localStorage.getItem('theme'); } catch (e) {}
@@ -28,98 +25,94 @@
 
   <style>
     :root {
-      /* Light theme — "day desk": paper and ink */
       --bg: #F3EEE1;
       --surface: #FFFDF8;
       --ink: #2A2622;
       --ink-soft: #6B6255;
-      --accent: #6E2A34;   /* oxblood */
-      --accent-2: #9C7A2E; /* brass */
+      --accent: #6E2A34;
+      --accent-2: #9C7A2E;
       --rule: #DED2BC;
       --focus: #6E2A34;
 
       --font-display: 'Fraunces', Georgia, serif;
       --font-body: 'IBM Plex Sans', system-ui, sans-serif;
-      --shadow: 3px 3px 0 var(--rule);
+      --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+      --shadow: 4px 4px 0 var(--rule);
     }
 
     [data-theme="dark"] {
-      /* Dark theme — "night desk": ink navy and lamp light */
       --bg: #14161D;
       --surface: #1B1E27;
       --ink: #EDE6D6;
       --ink-soft: #A6A090;
-      --accent: #C9A227;   /* brass lamp glow */
-      --accent-2: #A85D63; /* softened oxblood */
+      --accent: #C9A227;
+      --accent-2: #A85D63;
       --rule: #2B2E3A;
       --focus: #C9A227;
-      --shadow: 3px 3px 0 var(--rule);
+      --shadow: 4px 4px 0 var(--rule);
     }
 
     * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-    }
+    html, body { margin: 0; padding: 0; overflow-x: hidden; }
 
     body {
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 1px 1px, var(--rule) 1px, transparent 0) 0 0/22px 22px,
+        var(--bg);
       color: var(--ink);
       font-family: var(--font-body);
       line-height: 1.5;
       transition: background-color 0.25s ease, color 0.25s ease;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     .sr-only {
-      position: absolute;
-      width: 1px; height: 1px;
-      padding: 0; margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      white-space: nowrap;
-      border: 0;
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
 
     .skip-link {
-      position: absolute;
-      left: 1rem; top: -3rem;
-      background: var(--accent);
-      color: var(--surface);
-      padding: 0.6rem 1rem;
-      border-radius: 3px;
-      transition: top 0.2s ease;
-      z-index: 10;
+      position: absolute; left: 1rem; top: -3rem;
+      background: var(--accent); color: var(--surface);
+      padding: 0.6rem 1rem; border-radius: 3px;
+      transition: top 0.2s ease; z-index: 10;
     }
     .skip-link:focus { top: 1rem; }
 
     a { color: inherit; }
-
-    :focus-visible {
-      outline: 2px solid var(--focus);
-      outline-offset: 3px;
-    }
+    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
     .wrap {
       max-width: 640px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
+      padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.1rem, 4vw, 1.5rem) 4rem;
     }
+    @media (min-width: 700px) { .wrap { max-width: 760px; } }
 
-    /* Theme toggle */
-    .theme-toggle {
-      display: block;
-      margin-left: auto;
-      background: transparent;
-      border: 1px solid var(--rule);
-      border-radius: 999px;
-      width: 2.5rem;
-      height: 2.5rem;
-      cursor: pointer;
-      color: var(--ink);
+    /* Topbar */
+    .topbar {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.6rem; }
+    .brand svg { width: clamp(30px, 7vw, 34px); height: clamp(30px, 7vw, 34px); flex-shrink: 0; }
+    .brand span {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .theme-toggle {
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: 1px solid var(--rule); border-radius: 999px;
+      width: 2.75rem; height: 2.75rem; cursor: pointer; color: var(--ink);
+      flex-shrink: 0; -webkit-tap-highlight-color: transparent;
     }
     .theme-toggle svg { width: 1.15rem; height: 1.15rem; }
     .theme-toggle .icon-moon { display: none; }
@@ -127,98 +120,117 @@
     [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
 
     /* Hero */
-    .hero {
-      margin-top: 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .logo { flex-shrink: 0; }
+    .hero { margin-top: clamp(2rem, 6vw, 3rem); }
 
     .site-title {
       font-family: var(--font-display);
-      font-weight: 600;
-      font-size: clamp(1.65rem, 1.1rem + 2vw, 2.4rem);
+      font-weight: 700;
+      font-size: clamp(2rem, 1.3rem + 4.2vw, 3.4rem);
+      line-height: 1.05;
       margin: 0;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+      word-break: break-word;
     }
 
-    .typed-cursor { color: var(--accent); }
+    .rule {
+      border: 0; height: 2px; margin: 1.4rem 0 0;
+      background: repeating-linear-gradient(90deg, var(--accent) 0 10px, transparent 10px 16px);
+      opacity: 0.6;
+    }
 
     .tagline {
-      margin: 1rem 0 0;
-      max-width: 46ch;
+      margin: 1.3rem 0 0;
+      max-width: 50ch;
       color: var(--ink-soft);
-      font-size: 1rem;
+      font-size: clamp(0.95rem, 0.88rem + 0.3vw, 1.05rem);
     }
 
-    /* Nav grid — index cards, not rounded SaaS cards */
+    /* Nav grid */
     .hub-nav {
       list-style: none;
-      margin: 2.5rem 0 0;
+      margin: clamp(2.2rem, 6vw, 3rem) 0 0;
       padding: 0;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.1rem;
+      gap: clamp(0.9rem, 3vw, 1.2rem);
     }
+    .hub-nav li:first-child { grid-column: 1 / -1; }
 
     @media (max-width: 480px) {
       .hub-nav { grid-template-columns: 1fr; }
-      .hero { flex-direction: column; align-items: flex-start; }
     }
 
     .hub-nav a {
-      display: block;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       background: var(--surface);
       border: 1px solid var(--rule);
       box-shadow: var(--shadow);
-      padding: 1.1rem 1.1rem 1.2rem;
+      padding: 1.2rem 1.3rem;
       text-decoration: none;
+      min-height: 44px;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
     }
+    .hub-nav li:first-child a { padding: 1.5rem 1.4rem; }
 
-    .hub-nav a:hover,
-    .hub-nav a:focus-visible {
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0 var(--rule);
+    .hub-nav a:hover, .hub-nav a:focus-visible {
+      transform: translate(-3px, -3px);
+      box-shadow: 7px 7px 0 var(--rule);
     }
+    .hub-nav a:active { transform: translate(0, 0); box-shadow: 1px 1px 0 var(--rule); }
 
     @media (prefers-reduced-motion: reduce) {
       .hub-nav a { transition: none; }
-      .hub-nav a:hover, .hub-nav a:focus-visible { transform: none; }
+      .hub-nav a:hover, .hub-nav a:focus-visible, .hub-nav a:active { transform: none; }
     }
 
+    .icon-badge {
+      flex-shrink: 0;
+      width: 2.75rem; height: 2.75rem;
+      border-radius: 50%;
+      border: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+    }
     .hub-nav svg {
-      width: 1.6rem;
-      height: 1.6rem;
-      stroke: var(--accent);
-      fill: none;
-      stroke-width: 1.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      width: 1.35rem; height: 1.35rem;
+      stroke: var(--accent); fill: none;
+      stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    .hub-nav .label {
-      display: block;
-      margin-top: 0.65rem;
-      font-weight: 500;
-      font-size: 1.02rem;
-    }
+    .card-text { min-width: 0; }
+    .hub-nav .label { display: block; font-weight: 600; font-size: 1.05rem; }
+    .hub-nav .caption { display: block; margin-top: 0.2rem; font-size: 0.85rem; color: var(--ink-soft); }
 
-    .hub-nav .caption {
-      display: block;
-      margin-top: 0.2rem;
-      font-size: 0.85rem;
-      color: var(--ink-soft);
+    .card-index {
+      position: absolute; top: 0.7rem; right: 0.85rem;
+      font-family: var(--font-mono); font-size: 0.72rem;
+      color: var(--ink-soft); opacity: 0.7;
     }
 
     footer {
-      margin-top: 3rem;
+      margin-top: clamp(2.5rem, 6vw, 3.5rem);
       padding-top: 1.25rem;
       border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
       font-size: 0.85rem;
       color: var(--ink-soft);
+    }
+    footer .stamp {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid var(--rule);
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
     }
   </style>
 </head>
@@ -227,61 +239,85 @@
   <a class="skip-link" href="#hub-nav">Skip to navigation</a>
 
   <div class="wrap">
-    <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Switch to dark theme">
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>
-    </button>
+    <div class="topbar">
+      <div class="brand">
+        <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" fill="var(--accent)"></circle>
+          <text x="32" y="43" text-anchor="middle" font-family="var(--font-display)" font-weight="700" font-size="30" fill="var(--surface)">M</text>
+        </svg>
+        <span>Study Hub</span>
+      </div>
+      <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Switch to dark theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>
+      </button>
+    </div>
 
     <header class="hero">
-      <div class="logo" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="46" height="46" role="img" focusable="false">
-          <circle cx="32" cy="32" r="30" fill="var(--accent)"></circle>
-          <text x="32" y="43" text-anchor="middle" font-family="var(--font-display)" font-weight="600" font-size="30" fill="var(--surface)">M</text>
-        </svg>
-      </div>
-      <div>
-        <h1 class="site-title">
-          <span id="typedTitle" aria-hidden="true"></span>
-          <span class="sr-only">Mohsin's Study Hub</span>
-        </h1>
-      </div>
+      <h1 class="site-title">
+        <span id="typedTitle" aria-hidden="true"></span>
+        <span class="sr-only">Mohsin's Study Hub</span>
+      </h1>
+      <hr class="rule">
+      <p class="tagline"></p>
     </header>
-
-    <p class="tagline">A personal hub for staying on top of school: tests, deadlines, links, and your daily study log.</p>
 
     <ul class="hub-nav" id="hub-nav">
       <li>
         <a href="https://strinmo.com/mohsin/tests">
-          <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 12.5l2 2 4.5-4.5"/></svg>
-          <span class="label">Tests</span>
-          <span class="caption">Upcoming exams and quizzes</span>
+          <span class="card-index">01</span>
+          <span class="icon-badge"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8.5 12.5l2 2 4.5-4.5"/></svg></span>
+          <span class="card-text">
+            <span class="label">Tests</span>
+            <span class="caption">Upcoming exams and quizzes</span>
+          </span>
         </a>
       </li>
       <li>
         <a href="https://strinmo.com/mohsin/deadlines">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
-          <span class="label">Deadlines</span>
-          <span class="caption">Assignments and due dates</span>
+          <span class="card-index">02</span>
+          <span class="icon-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span>
+          <span class="card-text">
+            <span class="label">Deadlines</span>
+            <span class="caption">Assignments and due dates</span>
+          </span>
         </a>
       </li>
       <li>
         <a href="https://strinmo.com/mohsin/links">
-          <svg viewBox="0 0 24 24"><path d="M9.5 14.5l5-5"/><path d="M8 12l-1.5 1.5a3 3 0 004.2 4.2L12 16.2"/><path d="M16 12l1.5-1.5a3 3 0 00-4.2-4.2L12 7.8"/></svg>
-          <span class="label">Links</span>
-          <span class="caption">Portals, docs, and references</span>
+          <span class="card-index">03</span>
+          <span class="icon-badge"><svg viewBox="0 0 24 24"><path d="M9.5 14.5l5-5"/><path d="M8 12l-1.5 1.5a3 3 0 004.2 4.2L12 16.2"/><path d="M16 12l1.5-1.5a3 3 0 00-4.2-4.2L12 7.8"/></svg></span>
+          <span class="card-text">
+            <span class="label">Links</span>
+            <span class="caption">Portals, docs, and references</span>
+          </span>
         </a>
       </li>
       <li>
         <a href="https://strinmo.com/mohsin/study-log">
-          <svg viewBox="0 0 24 24"><path d="M6 4.5C7.5 3.5 10 3.5 12 5c2-1.5 4.5-1.5 6-0.5v13c-1.5-1-4-1-6 0.5-2-1.5-4.5-1.5-6-0.5z"/><path d="M12 5v13"/></svg>
-          <span class="label">Study Log</span>
-          <span class="caption">Daily record</span>
+          <span class="card-index">04</span>
+          <span class="icon-badge"><svg viewBox="0 0 24 24"><path d="M6 4.5C7.5 3.5 10 3.5 12 5c2-1.5 4.5-1.5 6-0.5v13c-1.5-1-4-1-6 0.5-2-1.5-4.5-1.5-6-0.5z"/><path d="M12 5v13"/></svg></span>
+          <span class="card-text">
+            <span class="label">Study Log</span>
+            <span class="caption">Daily record</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="https://strinmo.com/mohsin/pdf-viewer">
+          <span class="card-index">05</span>
+          <span class="icon-badge"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5"/></svg></span>
+          <span class="card-text">
+            <span class="label">PDF Viewer</span>
+            <span class="caption">Your saved PDFs</span>
+          </span>
         </a>
       </li>
     </ul>
 
     <footer>
-      Built by Mohsin to keep school organized in one place.
+      <span>Built by Mohsin to keep school organized in one place.</span>
+      <span class="stamp">est. 2026</span>
     </footer>
   </div>
 
@@ -289,7 +325,6 @@
     (function () {
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Typed title — types once, no endless loop.
       if (reduceMotion) {
         document.getElementById('typedTitle').textContent = "Mohsin's Study Hub";
       } else if (window.Typed) {
@@ -304,11 +339,8 @@
         document.getElementById('typedTitle').textContent = "Mohsin's Study Hub";
       }
 
-      // Theme toggle
       var toggle = document.getElementById('themeToggle');
-      function currentTheme() {
-        return document.documentElement.getAttribute('data-theme') || 'light';
-      }
+      function currentTheme() { return document.documentElement.getAttribute('data-theme') || 'light'; }
       function applyState() {
         var isDark = currentTheme() === 'dark';
         toggle.setAttribute('aria-pressed', String(isDark));
