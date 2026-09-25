@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Study Log — Mohsin's Study Hub</title>
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%236E2A34'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='32' fill='%23F3EEE1'%3EM%3C/text%3E%3C/svg%3E">
@@ -36,6 +36,9 @@
       --font-display: 'Fraunces', Georgia, serif;
       --font-body: 'IBM Plex Sans', system-ui, sans-serif;
       --shadow: 3px 3px 0 var(--rule);
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     [data-theme="dark"] {
@@ -52,6 +55,7 @@
       --shadow: 3px 3px 0 var(--rule);
     }
 
+    html { scroll-padding-top: env(safe-area-inset-top, 0px); }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     body {
@@ -79,7 +83,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1rem 1.5rem;
+      padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.5rem 1rem;
       margin: 0 -1.5rem;
       background: var(--bg);
       border-bottom: 1px solid var(--rule);
@@ -120,7 +124,7 @@
     .field { display: flex; flex-direction: column; gap: 0.4rem; flex: 1 1 200px; }
     .field.full { flex-basis: 100%; }
     .field label { font-size: 0.85rem; color: var(--ink-soft); }
-    .field input, .field textarea {
+    .field input, .field textarea, .field select {
       font-family: var(--font-body);
       font-size: 1rem;
       padding: 0.55rem 0.7rem;
@@ -130,6 +134,7 @@
       color: var(--ink);
       resize: vertical;
     }
+    .field select { cursor: pointer; }
     .field textarea { min-height: 4.5rem; }
 
     .save-btn {
@@ -231,7 +236,20 @@
       </div>
       <div class="field" style="flex: 2 1 220px;">
         <label for="subjectInput">Subject</label>
-        <input placeholder="e.g. Biology" id="subjectInput">
+        <select id="subjectInput">
+          <option value="" disabled selected>Select subject</option>
+          <option>Math</option>
+          <option>Physics</option>
+          <option>Chemistry</option>
+          <option>Biology</option>
+          <option>Islamic</option>
+          <option>Arabic</option>
+          <option>English</option>
+          <option>Quran</option>
+          <option>Dstoor</option>
+          <option>Computer</option>
+          <option>Mrooria</option>
+        </select>
       </div>
       <div class="field full">
         <label for="notesInput">What did you study?</label>
@@ -269,9 +287,8 @@
 
     dateInput.value = new Date().toISOString().slice(0, 10);
 
-    subjectInput.addEventListener("keydown", function (event) { if (event.key === "Enter") button.click(); });
-
-    let entries = JSON.parse(localStorage.getItem("StudyLog_Mohsin")) || {};
+    let entries = {};
+    try { entries = JSON.parse(localStorage.getItem("StudyLog_Mohsin")) || {}; } catch (e) { entries = {}; }
 
     const userList = document.getElementById("userList");
     const emptyState = document.getElementById("emptyState");
@@ -288,7 +305,8 @@
       return name.replace(/\.json$/i, "");
     }
 
-    let currentFileName = localStorage.getItem(FILENAME_KEY) || defaultFileName();
+    let currentFileName = "";
+    try { currentFileName = localStorage.getItem(FILENAME_KEY) || defaultFileName(); } catch (e) { currentFileName = defaultFileName(); }
 
     function setCurrentFileName(name) {
       currentFileName = stripJsonExt(name);
@@ -307,8 +325,6 @@
       const today = new Date().toISOString().slice(0, 10);
       const suggestedName = `study-log-${today}.json`;
 
-      // Modern browsers (Chrome, Edge, ...): real "Save As" dialog —
-      // lets the user pick both the file name and the folder.
       if (window.showSaveFilePicker) {
         try {
           const handle = await window.showSaveFilePicker({
@@ -330,11 +346,8 @@
         return;
       }
 
-      // Fallback (Safari, Firefox, ...): these browsers don't let a page
-      // choose the folder, but we can at least ask for a file name; the
-      // browser then saves it to its default downloads location.
       let filename = prompt("Save as:", suggestedName);
-      if (filename === null) return; // cancelled
+      if (filename === null) return;
       filename = filename.trim() || suggestedName;
       if (!filename.toLowerCase().endsWith(".json")) filename += ".json";
 
@@ -376,7 +389,7 @@
           return;
         }
         entries = parsed;
-        localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries));
+        try { localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries)); } catch (e) {}
         setCurrentFileName(file.name);
         renderList();
         importFile.value = "";
@@ -395,7 +408,6 @@
       const keys = Object.keys(entries);
       emptyState.hidden = keys.length !== 0;
 
-      // Most recent day first
       keys.sort((a, b) => (entries[b].date || "").localeCompare(entries[a].date || ""));
 
       for (let key of keys) {
@@ -421,7 +433,7 @@
         delBtn.className = "remove-btn";
         delBtn.addEventListener("click", () => {
           delete entries[key];
-          localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries));
+          try { localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries)); } catch (e) {}
           renderList();
         });
 
@@ -443,12 +455,12 @@
     button.addEventListener("click", () => {
       const subject = subjectInput.value.trim();
       const notes = notesInput.value.trim();
-      if (subject.length === 0) { alert("Type a subject.."); return; }
+      if (subject.length === 0) { alert("Choose a subject.."); return; }
       if (!dateInput.value) { alert("Pick a date"); return; }
 
       const newKey = `log: ${Math.random()}`;
       entries[newKey] = { date: dateInput.value, subject: subject, notes: notes };
-      localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries));
+      try { localStorage.setItem("StudyLog_Mohsin", JSON.stringify(entries)); } catch (e) {}
 
       subjectInput.value = "";
       notesInput.value = "";
